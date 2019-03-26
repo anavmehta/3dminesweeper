@@ -1,6 +1,7 @@
 /*:
  # Solving Constraints Part 2
- In this playground, the minesweeper is preset to have a few constraints. You should be able to solve all the constraints and win without guessing
+ The minesweeper is preset to have a few constraints. This requires a few guesses. With a little luck, you should be able to solve this minefield with a few guesses.
+ 
  [Next Page](@next)
  */
 //#-hidden-code
@@ -11,5 +12,4 @@ PlaygroundListener.shared.setup()
 //#-editable-code
 play()
 //#-end-editable-code
-//#-hidden-code
-//#-end-hidden-code
+

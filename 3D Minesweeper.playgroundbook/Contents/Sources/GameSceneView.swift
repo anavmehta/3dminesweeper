@@ -1,6 +1,6 @@
 // GameSceneView.swift
 // Minesweeper
-// Created by Anav Mehta 2/8/2019
+// Created by Anav Mehta 3/18/2019
 // Copyright (c) 2019 Anav Mehta. All rights reserved
 import Foundation
 import UIKit
@@ -39,7 +39,7 @@ public class Tile {
 public class GameSceneView {
     public var randomization: Bool = true
     
-    public var numMines: Int = maxMines/2
+    public var numMines: Int = maxMines/5
     public var boardType: Int = 1
     public var animationEnabled: Bool = true
     
@@ -53,6 +53,7 @@ public class GameSceneView {
     let audioFilePathSafe = Bundle.main.path(forResource:"mallert 008", ofType: "mp3")
     let audioFilePathWon = Bundle.main.path(forResource:"crowd", ofType: "mp3")
     let audioFilePathLost = Bundle.main.path(forResource:"lost", ofType: "mp3")
+    let audioFilePathWrong = Bundle.main.path(forResource:"wrong", ofType: "wav")
     public var soundEnabled: Bool = true
     
     public var dx: [Int] = [-1,-1,-1,-1,-1,-1,-1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0,  1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -131,6 +132,8 @@ public class GameSceneView {
             audioFilePath = audioFilePathWon
         } else if (sound == 5) {
             audioFilePath = audioFilePathLost
+        } else if (sound == 6) {
+            audioFilePath = audioFilePathWrong
         }
         if audioFilePath != nil {
             
@@ -186,7 +189,7 @@ public class GameSceneView {
         var unknown = 0;
         var mines = 0;
         var ret = 0;
-        if (n >= 0 && n <= 9) {
+        if (n >= 0 && n <= 27) {
             unknown = calc_or_set(x:x, y:y, z:z, c:UNKNOWN, a:0)
             mines = calc_or_set(x:x, y:y, z:z, c:MINE, a:0)
             if (unknown == n - mines) {
@@ -309,6 +312,12 @@ public class GameSceneView {
             addMine(x:6,y:1,z:7)
             addMine(x:7,y:0,z:7)
             addMine(x:7,y:1,z:7)
+            addMine(x:1,y:5,z:7)
+            //addMine(x:1,y:6,z:7)
+            addMine(x:1,y:7,z:7)
+            addMine(x:2,y:5,z:7)
+            addMine(x:2,y:6,z:7)
+            addMine(x:2,y:7,z:7)
             
             addMine(x:1,y:1,z:0)
             addMine(x:1,y:2,z:0)
@@ -325,13 +334,49 @@ public class GameSceneView {
             addMine(x:6,y:1,z:0)
             addMine(x:7,y:0,z:0)
             addMine(x:7,y:1,z:0)
+            
+            
+            addMine(x:0,y:5,z:3)
+            addMine(x:0,y:6,z:3)
+            addMine(x:0,y:7,z:3)
+            addMine(x:0,y:5,z:4)
+            //addMine(x:0,y:6,z:4)
+            addMine(x:0,y:7,z:4)
+            addMine(x:0,y:5,z:5)
+            addMine(x:0,y:6,z:5)
+            addMine(x:0,y:7,z:5)
+            addMine(x:0,y:5,z:6)
+            addMine(x:0,y:6,z:6)
+            addMine(x:0,y:7,z:6)
+            addMine(x:0,y:5,z:7)
+            addMine(x:0,y:6,z:7)
+            addMine(x:0,y:7,z:7)
+            
+            
+            addMine(x:1,y:7,z:3)
+            addMine(x:1,y:7,z:4)
+            addMine(x:1,y:7,z:5)
+            addMine(x:1,y:7,z:6)
+            addMine(x:2,y:7,z:3)
+            addMine(x:2,y:7,z:4)
+            addMine(x:2,y:7,z:5)
+            addMine(x:2,y:7,z:6)
+            
+            
             state = State.Playing
             tap(x:5,y:3,z:7)
             tap(x:0,y:2,z:7)
             tap(x:5,y:3,z:0)
             tap(x:0,y:2,z:0)
+            tap(x:0,y:6,z:4)
+            tap(x:1,y:6,z:7)
+            tap(x:3,y:6,z:7)
+            tap(x:3,y:7,z:7)
+            tap(x:0,y:4,z:7)
+            tap(x:1,y:4,z:7)
             soundEnabled = true
             headerView.timerLbl.isHidden = true
+            numMines = countNumMines()
             headerView.flagsLbl.text = String(numMines-flags)
             headerView.flagsLbl.sizeToFit()
         }
@@ -429,6 +474,7 @@ public class GameSceneView {
             tap(x:7,y:5,z:2)
             soundEnabled = true
             headerView.timerLbl.isHidden = true
+            numMines = countNumMines()
             headerView.flagsLbl.text = String(numMines-flags)
             headerView.flagsLbl.sizeToFit()
         }
@@ -478,6 +524,14 @@ public class GameSceneView {
             data[id] = true
             numMines=numMines+1
         }
+    }
+    
+    func countNumMines() -> Int {
+        var numMines = 0
+        for i in 0..<numTiles {
+            if(data[i]) {numMines=numMines+1}
+        }
+        return numMines
     }
     
     public func showTile(x: Int, y: Int, z: Int, tap:Bool) {
@@ -543,15 +597,19 @@ public class GameSceneView {
         let tileId = getId(x: x, y: y, z: z)
         let tile = tiles[tileId]
         if tile.state == .Empty {
-            tile.state = .Flagged
-            flags += 1
-            if(animationEnabled) {scnScene.addFlag(id:tileId)}
+            if(flags < numMines) {
+                tile.state = .Flagged
+                flags += 1
+                if(animationEnabled) {scnScene.addFlag(id:tileId)}
+                playSound(sound: 1)
+            } else {playSound(sound: 6)}
         } else if tile.state == .Flagged {
             tile.state = .Empty
             flags -= 1
             if(animationEnabled) {scnScene.removeFlag(id:tileId)}
+            playSound(sound: 1)
         }
-        playSound(sound:1 )
+        //playSound(sound:1 )
         headerView.flagsLbl.text = String(format: "%d", numMines-flags)
         headerView.sizeToFit()
     }

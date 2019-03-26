@@ -1,6 +1,6 @@
 // GameSceneView.swift
 // Minesweeper
-// Created by Anav Mehta 2/8/2019
+// Created by Anav Mehta 3/18/2019
 // Copyright (c) 2019 Anav Mehta. All rights reserved
 import Foundation
 import UIKit
@@ -9,6 +9,7 @@ import SpriteKit
 import CoreGraphics
 import AVFoundation
 import PlaygroundSupport
+
 
 extension SCNNode{
     func highlightNodeWithDuration(_ duration: TimeInterval){
@@ -28,6 +29,37 @@ extension SCNNode{
         let infiniteLoop = SCNAction.repeatForever(pulseSequence)
         self.runAction(infiniteLoop)
     }
+    func highlightNodeWithDuration2(_ duration: TimeInterval, _ color: String){
+        var highlightAction: SCNAction
+        if(color == "red") {
+            highlightAction = SCNAction.customAction(duration: duration) { (node, elapsedTime) in
+            
+                let color = UIColor(red: 1, green: CGFloat(1)-elapsedTime/CGFloat(duration), blue: 0, alpha: 1)
+                let currentMaterial = self.geometry?.firstMaterial
+                currentMaterial?.emission.contents = color
+            }
+        } else {
+            highlightAction = SCNAction.customAction(duration: duration) { (node, elapsedTime) in
+                
+                let color = UIColor(red: elapsedTime/CGFloat(duration), green: 1, blue: 0, alpha: 1)
+                let currentMaterial = self.geometry?.firstMaterial
+                currentMaterial?.emission.contents = color
+            }
+            
+        }
+        let unHighlightAction = SCNAction.customAction(duration: duration) { (node, elapsedTime) in
+            let color = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+            let currentMaterial = self.geometry?.firstMaterial
+            currentMaterial?.emission.contents = color
+        }
+        let pulseSequence = SCNAction.sequence([highlightAction, unHighlightAction])
+        let infiniteLoop = SCNAction.repeatForever(pulseSequence)
+        self.runAction(infiniteLoop)
+    }
+}
+
+extension SCNNode{
+    
 }
 
 extension CGFloat {
@@ -56,6 +88,11 @@ class GameScene: SCNScene {
         UIColor(displayP3Red: 0, green: 1, blue: 1, alpha: 1),         // Aqua
         UIColor(displayP3Red: 0.502, green: 0, blue: 0.502, alpha: 1), // Purple
         UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 1),         // Black
+        UIColor(displayP3Red:0.93, green:0.80, blue:0.91, alpha:1.0),
+        UIColor(displayP3Red:0.93, green:0.80, blue:0.84, alpha:1.0),
+        UIColor(displayP3Red:0.05, green:0.49, blue:0.13, alpha:1.0),
+        UIColor(displayP3Red:0.93, green:0.90, blue:0.84, alpha:1.0),
+        UIColor(displayP3Red:0.05, green:0.49, blue:0.90, alpha:1.0)
     ]
     
     
@@ -173,6 +210,9 @@ class GameScene: SCNScene {
         textNode.position.x = -0.2
         textNode.position.y = -1.3
         textNode.position.z = 0.5
+        if(gameSceneView.tiles[id].minesAround - 1 > 9) {
+            textNode.position.x = -0.45
+        }
         attachNode(parentNode: boxNodes[id], childNode: textNode, first: false, face: .Green)
         
         
@@ -263,20 +303,30 @@ class GameScene: SCNScene {
                                                     redMaterial, redMaterial, redMaterial];
                 addText(node: boxNodes[i], str: "X")
                 explodedMine = boxNodes[i]
-                boxNodes[i].highlightNodeWithDuration(0.5)
+                boxNodes[i].highlightNodeWithDuration2(2.0, "red")
                 //boxNodes[i].physicsBody?.applyForce(force, at: SCNVector3(x:0,y:0,z:0), asImpulse: true)
                 
-            } else if(gameSceneView.isMine(id: i) && !gameSceneView.isFlag(id: i)) {
+            } else if(gameSceneView.isMine(id: i)) {
                 boxNodes[i].geometry?.materials =  [redMaterial,  redMaterial,   redMaterial,
                                                     redMaterial, redMaterial, redMaterial];
-                boxNodes[i].highlightNodeWithDuration(0.5)
+                boxNodes[i].highlightNodeWithDuration2(2.0, "red")
             } else if(gameSceneView.tiles[i].state == .BadFlag) {
                 addText(node: boxNodes[i], str: "X")
+            }
+            else if(gameSceneView.tiles[i].state == .Discovered) {
+                //boxNodes[i].geometry?.materials =  [greenMaterial,  greenMaterial, greenMaterial,
+                //                                    greenMaterial, greenMaterial, greenMaterial];
+                //boxNodes[i].highlightNodeWithDuration2(2.0, "green")
+            }
+            else if(!gameSceneView.isMine(id:i)) {
+                boxNodes[i].geometry?.materials =  [greenMaterial,  greenMaterial,   greenMaterial,
+                                                    greenMaterial, greenMaterial, greenMaterial];
+                boxNodes[i].highlightNodeWithDuration2(2.0, "green")
             }
             else if(gameSceneView.tiles[i].state == .Empty) {
                 boxNodes[i].geometry?.materials =  [blackMaterial,  blackMaterial, blackMaterial,
                                                     blackMaterial, blackMaterial, blackMaterial];
-                boxNodes[i].highlightNodeWithDuration(0.5)
+                boxNodes[i].highlightNodeWithDuration(2.0)
             }
         }
 

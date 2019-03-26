@@ -1,5 +1,6 @@
-/*: # Programming Part 2
-Using what we have learned. We will try to uncover the minefield programmatically. One such code is given below. There is some luck in minefield, especially when you cant solve the constraints. You have to guess when those visible constraints cannot give you the location of a minefield
+/*:
+ # Solving The Minefield Part 2
+ This is similar to the earlier page, but here we try a different heuristic by trying to guess in the middle instead of the edges. Does this have better chance of winning the game? Step through the code to understand how the algorithm works, then play, and change the code to improve it.
  */
 //#-hidden-code
 import PlaygroundSupport
@@ -13,7 +14,7 @@ sound(enabled: false)
 animation(enabled: true)
 setMineDensity(percentage:10)
 let faces = [Face.Green,Face.Yellow,Face.Blue,Face.Red,Face.Purple,Face.Gray]
-/* We write a function to smartly guess */
+/* A function to smartly guess */
 func guess() -> Bool {
     var found: Bool = false
     var lost: Bool = false
@@ -79,5 +80,4 @@ while(true) {
     }
 }
 //#-end-editable-code
-//#-hidden-code
-//#-end-hidden-code
+

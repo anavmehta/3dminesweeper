@@ -1,6 +1,7 @@
 /*:
  # Solving Constraints Part 1
- In this playground, the minesweeper is preset to have a few constraints. There is a very power constraint solver hint which you can get by pressing the Yellow light button on the top right. You should be able to solve all the constraints and win without guessing. Keep track of the number of mines in the minefield, and in some cases it will give a hint on where the remaining mines are.
+ In this playground, the minesweeper is preset with a few constraints. You should be able to solve all the constraints and win without guessing. There are a few 3D constraints on the edges. You can also use the constraint solver (hint()) by pressing the Yellow light button on the top right. To get an idea how the constraints work, use the hint as the first pass to solve the minesweeper cube.
+ 
   [Next Page](@next)
  */
 //#-hidden-code
@@ -11,5 +12,4 @@ PlaygroundListener.shared.setup()
 //#-editable-code
 play()
 //#-end-editable-code
-//#-hidden-code
-//#-end-hidden-code
+

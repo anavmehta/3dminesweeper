@@ -1,6 +1,6 @@
-// Common.swift
+// ConstraintBoard.swift
 // Minesweeper
-// Created by Anav Mehta 2/8/2019
+// Created by Anav Mehta 3/18/2019
 // Copyright (c) 2019 Anav Mehta. All rights reserved
 import Foundation
 import PlaygroundSupport

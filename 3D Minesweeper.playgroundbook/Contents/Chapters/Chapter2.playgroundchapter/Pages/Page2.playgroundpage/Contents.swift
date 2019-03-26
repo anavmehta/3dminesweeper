@@ -2,7 +2,10 @@
  # Exploring 3D Minesweeper Functions Part 2
  - flag(x:x, y:y, face:face) - flags the tile as a mine at position (x, y, face)
  - hint() - returns position (x,y,face) of the hint
- - variables numHorizontalTiles and numVerticalTiles and numHeightTiles is the size of the minefield
+ - variables numHorizontalTiles x numVerticalTiles x numHeightTiles are 8x8x8 the size of the minefield cube
+ 
+ To learn the code fragments step through the code slowly and then at the end you can write your own code. While the code is running you can still explore the cube via pan, zoom or rotate.
+ 
   [Next Page](@next)
  */
 //#-hidden-code
@@ -13,39 +16,39 @@ PlaygroundListener.shared.setup()
 //#-code-completion(everything, hide)
 //#-code-completion(currentmodule, show)
 //#-code-completion(identifier, show, true, false)
-setMineDensity(percentage: /*#-editable-code set mine density*/50/*#-end-editable-code*/)
-sound(enabled: /*#-editable-code sound enabled*/false/*#-end-editable-code*/)
-//#-editable-code
+setMineDensity(percentage: /*#-editable-code set mine density*/10/*#-end-editable-code*/)
+sound(enabled: /*#-editable-code sound enabled*/true/*#-end-editable-code*/)
 //#-code-completion(identifier, show, play, mines, tap, flag, hint, status, numHorizontalTiles, numVerticalTiles)
+
 /*:
- - Example: *How to find a hint (which can be determined from the revealed tiles*:
-  * (x,y,face,type)=hint()
-  * type:
-       * UNKNOWN (not yet explored)
-       * MINE (can be determined to be a mine)
-       * SAFE (can be determined to be safe)
- */
-var x,y,type: Int
-var face: Face
-(x,y,face,type)=hint()
-//#-editable-code Tap to write your code
-//#-end-editable-code
-/*:
- - Example: *How to flag a mine (this can be done on the liverview by long tapping the tile*:
- * flag(x: Int, y: Int)
- * (if you flag the same location again, it will remove the flag)
+ # Flag a mine (or remove a flag):
+ - flag(x: Int, y: Int) (if you flag the same location again, it will remove the flag)
  */
 flag(x: /*#-editable-code set x */5/*#-end-editable-code*/,y: /*#-editable-code set y */5/*#-end-editable-code*/, face: .Green )
 /* If you flag the same location again, it will remove the flag */
 flag(x: /*#-editable-code set x */5/*#-end-editable-code*/,y: /*#-editable-code set y */5/*#-end-editable-code*/, face: .Green )
-//#-editable-code Tap to write your code
-// We are iterating over the faces, tap on a coordinates and see if we can find hints
+
+/*:
+ # Hint from revealed constraints:
+ - (x,y,face,type)=hint()
+    - (x,y): Coordinates of the hint
+    - type:
+        - UNKNOWN (cannot be determined, ie no hints available)
+        - MINE (determined to be a mine)
+        - SAFE (determined to be safe)
+    - face: [Face.Green,Face.Yellow,Face.Blue,Face.Red,Face.Purple,Face.Gray]
+ */
+var x,y,type: Int
+var face: Face
+(x,y,face,type)=hint()
+
+/* We are iterating over the faces, tap on a coordinates and see if we can find hints */
 var retStatus: Int
 let faces = [Face.Green,Face.Yellow,Face.Blue,Face.Red,Face.Purple,Face.Gray]
 for facevar:Face in faces {
     tap(x: /*#-editable-code set x*/5/*#-end-editable-code*/,y: /*#-editable-code set y*/5/*#-end-editable-code*/, face: facevar)
     retStatus=status(x: /*#-editable-code set x*/5/*#-end-editable-code*/,y: /*#-editable-code set y*/5/*#-end-editable-code*/,face: facevar)
-    // If the location on the face has a mine then you exploded it and need to restart
+    /* If the location on the face has a mine then you exploded it and need to restart */
     if(retStatus == EXPLODEDMINE) {play()}
     else {
         (x,y,face,type) = hint()
@@ -56,6 +59,5 @@ for facevar:Face in faces {
         }
     }
 }
+//#-editable-code Tap to write your code
 //#-end-editable-code
-//#-hidden-code
-//#-end-hidden-code
