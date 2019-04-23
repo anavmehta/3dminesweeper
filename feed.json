@@ -1,0 +1,46 @@
+{
+	"title": "3D Minesweeper",
+	"subtitle": "Anav Mehta Playgroundbooks",
+	"publisherName": "Anav Mehta",
+	"feedIdentifier": "com.blogspot.3dwaffles",
+	"contactURL": "https://github.com/anavmehta/3dminesweeper",
+	"formatVersion": "1.0",	
+	"documents": [
+		{
+			"title": "3D Minesweeper",
+			"overviewSubtitle" : "Swift 4.2 Edition",
+			"detailSubtitle": "Learn about minesweeper and solving constraints",
+			"description": "A simple game of minesweeper can teach you logic and probability",
+			"contentIdentifier": "com.blogspot.3dwaffles",
+			"contentVersion": "0.91",
+			"url": "https://github.com/anavmehta/3dminesweeper/releases/download/v0.91/Minesweeper.playgroundbook.zip",
+			"bannerImageURL": "https://github.com/anavmehta/3dminesweeper/blob/master/bannerImage.png",
+			"thumbnailURL": "https://github.com/anavmehta/3dminesweeper/blob/master/thumbNailImage.png",
+			"publishedDate": "2019-02-14T12:00:00+00:00",
+			"lastUpdatedDate": "2019-02-16T12:00:00+00:00",
+			"difficultyLevel" : "intermediate",
+			"additionalInformation": [
+				{
+					"name": "Publisher:",
+					"value": "Anav Mehta"
+				},
+				{
+					"name": "Version:",
+					"value": "0.91"
+				},
+				{
+					"type": "date",
+					"name": "Released:",
+					"value": "2019-02-13T12:00:00+00:00"
+				},
+				{
+					"name": "Languages:",
+					"value": "English"
+				}
+			],
+			"previewImageURLs": [
+				"https://github.com/anavmehta/3dminesweeper/blob/master/previewImage.png"
+			]
+		}
+	]
+}
